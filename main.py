@@ -106,7 +106,11 @@ def copy_files(extract_dir):
                 if line.startswith("cooppassword"):
                     ini_file.write(f"cooppassword = {password_entry.get()}\n")
                 elif line.startswith("mod_language_override"):
-                    ini_file.write(f"mod_language_override = {language_var.get()}\n")
+                    # Only write the language if it's not "default"
+                    if language_var.get() != "default":
+                        ini_file.write(f"mod_language_override = {language_var.get()}\n")
+                    else:
+                        ini_file.write("mod_language_override = \n")
                 elif line.startswith("allow_invaders"):
                     ini_file.write(f"allow_invaders = {1 if invaders_var.get() else 0}\n")
                 elif line.startswith("death_debuffs"):
@@ -158,7 +162,7 @@ def toggle_advanced_settings():
 
 
 def load_languages(locale_dir):
-    languages = []
+    languages = ["default"]  # Add "default" as the first option
     for filename in os.listdir(locale_dir):
         if filename.endswith('.json'):
             language = os.path.splitext(filename)[0]  # Remove the .json extension
@@ -175,9 +179,8 @@ def update_language_dropdown(extract_dir):
             print("No language files found in the locale folder.")
         else:
             print(f"Languages found: {languages}")
-        languages.insert(0, "")  # Add an empty option at the beginning of the list
         language_dropdown['values'] = languages
-        language_dropdown.current(0)  # Select the first default value (empty)
+        language_dropdown.current(0)  # Select the first default value
     else:
         print(f"Directory {locale_dir} not found!")
 
@@ -192,7 +195,7 @@ def start_process():
 
 # Create the GUI with Tkinter
 root = tk.Tk()
-root.title("ZIP Downloader and Extractor")
+root.title("ersc installer")
 
 # Bind the close function to the main window
 root.protocol("WM_DELETE_WINDOW", on_close)
@@ -219,7 +222,7 @@ password_entry.pack(pady=10)
 
 # Add a label and a dropdown menu to select the language
 tk.Label(root, text="Select a language:").pack(pady=10)
-language_var = tk.StringVar(value="")  # Empty field by default
+language_var = tk.StringVar(value="default")  # Default to "default"
 language_dropdown = ttk.Combobox(root, textvariable=language_var)
 language_dropdown.pack(pady=10)
 
