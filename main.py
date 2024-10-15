@@ -15,8 +15,8 @@ def get_latest_release_zip_url():
     return zip_url
 
 
-# Funzione per scaricare, estrarre e copiare i file, mantenendo la struttura delle cartelle
-def download_and_extract(is_advanced):
+# Funzione per scaricare e estrarre i file, mantenendo la struttura delle cartelle
+def download_and_extract():
     zip_url = get_latest_release_zip_url()
     zip_file_path = "repo_ersc.zip"
 
@@ -33,7 +33,17 @@ def download_and_extract(is_advanced):
         zip_ref.extractall(extract_dir)
     print(f"Extracted files to {extract_dir}")
 
-    # Imposta la cartella di destinazione
+    # Aggiorna il menu a tendina delle lingue
+    update_language_dropdown(extract_dir)
+
+    # Elimina il file zip scaricato
+    os.remove(zip_file_path)
+
+    return extract_dir
+
+
+# Funzione per copiare i file nella directory di destinazione
+def copy_files(extract_dir):
     destination_dir = filedialog.askdirectory(title="Scegli la cartella di destinazione")
     if not destination_dir:
         messagebox.showwarning("Nessuna cartella selezionata", "Devi selezionare una cartella di destinazione.")
@@ -93,12 +103,8 @@ def download_and_extract(is_advanced):
     else:
         print(f"File {ini_file_path} non trovato!")
 
-    os.remove(zip_file_path)
     shutil.rmtree(extract_dir)
     print("Cleaned up temporary files.")
-
-    # Aggiorna il menu a tendina delle lingue
-    update_language_dropdown(seamless_coop_dir)
 
     messagebox.showinfo("Completato", f"File estratti e copiati correttamente nella cartella: {destination_dir}")
     root.destroy()
@@ -125,11 +131,23 @@ def update_language_dropdown(extract_dir):
     locale_dir = os.path.join(extract_dir, "SeamlessCoop", "locale")
     if os.path.exists(locale_dir):
         languages = load_languages(locale_dir)
+        if not languages:
+            print("Nessun file di lingua trovato nella cartella locale.")
+        else:
+            print(f"Lingue trovate: {languages}")
         languages.insert(0, "")  # Aggiungi un'opzione vuota all'inizio della lista
         language_dropdown['values'] = languages
         language_dropdown.current(0)  # Seleziona il primo valore di default (vuoto)
     else:
         print(f"Directory {locale_dir} non trovata!")
+
+
+# Funzione principale per gestire il processo completo
+def start_process():
+    extract_dir = download_and_extract()
+    if extract_dir:
+        # Abilita il bottone per copiare i file dopo che le lingue sono state aggiornate
+        copy_button.config(state=tk.NORMAL)
 
 
 # Creazione dell'interfaccia grafica con Tkinter
@@ -160,7 +178,7 @@ language_dropdown.pack(pady=10)
 # Frame per le impostazioni avanzate
 advanced_frame = tk.Frame(root)
 
-# Aggiungi checkbox per le impostazioni di gameplay
+# Checkbox per le impostazioni di gameplay
 invaders_var = tk.BooleanVar(value=True)
 death_debuffs_var = tk.BooleanVar(value=True)
 summons_var = tk.BooleanVar(value=True)
@@ -171,7 +189,7 @@ tk.Checkbutton(advanced_frame, text="Debuffs alla morte", variable=death_debuffs
 tk.Checkbutton(advanced_frame, text="Permetti evocazioni", variable=summons_var).pack(anchor=tk.W)
 tk.Checkbutton(advanced_frame, text="Salta schermate di avvio", variable=skip_splash_var).pack(anchor=tk.W)
 
-# Aggiungi menu a tendina per altre impostazioni
+# Impostazioni avanzate
 master_volume_var = tk.IntVar(value=5)
 enemy_health_scaling_var = tk.IntVar(value=35)
 enemy_damage_scaling_var = tk.IntVar(value=0)
@@ -201,10 +219,13 @@ tk.Entry(advanced_frame, textvariable=boss_damage_scaling_var).pack(anchor=tk.W)
 tk.Label(advanced_frame, text="Assorbimento postura boss (% per giocatore):").pack(anchor=tk.W)
 tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var).pack(anchor=tk.W)
 
-# Aggiungi un bottone per iniziare il processo di download, estrazione e copia
-download_button = tk.Button(root, text="Scarica ed estrai file",
-                            command=lambda: download_and_extract(install_type_var.get() == "avanzata"))
-download_button.pack(pady=20)
+# Bottone per copiare i file nella cartella di destinazione
+copy_button = tk.Button(root, text="Copia i file nella cartella di destinazione",
+                         command=lambda: copy_files("estratti"), state=tk.DISABLED)
+copy_button.pack(pady=20)
+
+# Avvia automaticamente il processo di download e installazione
+start_process()
 
 # Mantieni aperta la finestra della GUI
 root.mainloop()
