@@ -107,7 +107,7 @@ def copy_files(extract_dir):
                     ini_file.write(f"cooppassword = {password_entry.get()}\n")
                 elif line.startswith("mod_language_override"):
                     # Only write the language if it's not "default"
-                    if language_var.get() != "default":
+                    if language_var.get() != "system default":
                         ini_file.write(f"mod_language_override = {language_var.get()}\n")
                     else:
                         ini_file.write("mod_language_override = \n")
@@ -162,13 +162,14 @@ def toggle_advanced_settings():
 
 
 def load_languages(locale_dir):
-    languages = ["default"]  # Add "default" as the first option
+    languages = []
     for filename in os.listdir(locale_dir):
         if filename.endswith('.json'):
             language = os.path.splitext(filename)[0]  # Remove the .json extension
             languages.append(language)
+    languages = sorted(languages)  # Sort the languages alphabetically
+    languages.insert(0, "system default")  # Ensure "default" is the first option
     return languages
-
 
 # This function updates the language dropdown once the files have been extracted to the temporary folder
 def update_language_dropdown(extract_dir):
@@ -222,7 +223,7 @@ password_entry.pack(pady=10)
 
 # Add a label and a dropdown menu to select the language
 tk.Label(root, text="Select a language:").pack(pady=10)
-language_var = tk.StringVar(value="default")  # Default to "default"
+language_var = tk.StringVar(value="system default")  # Default to "default"
 language_dropdown = ttk.Combobox(root, textvariable=language_var)
 language_dropdown.pack(pady=10)
 
