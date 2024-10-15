@@ -15,30 +15,46 @@ def get_latest_release_zip_url():
     return zip_url
 
 
-# Funzione per mostrare la schermata di caricamento
+# Funzione per mostrare la schermata di caricamento con barra di progresso
 def show_loading_screen():
     loading_screen = tk.Toplevel(root)
     loading_screen.title("Caricamento...")
+    loading_screen.geometry("350x100")  # Dimensione della schermata di caricamento
     loading_label = tk.Label(loading_screen, text="Download in corso, attendere prego...")
-    loading_label.pack(padx=20, pady=20)
+    loading_label.pack(padx=20, pady=10)
+
+    progress_bar = ttk.Progressbar(loading_screen, orient="horizontal", mode="determinate", length=300)
+    progress_bar.pack(padx=20, pady=10)
+
     loading_screen.grab_set()  # Impedisce interazioni con la finestra principale
-    return loading_screen
+    loading_screen.transient(root)  # Mantiene la finestra principale sopra
+    return loading_screen, progress_bar
 
 
-# Funzione per scaricare e estrarre i file, mantenendo la struttura delle cartelle
+# Funzione per scaricare ed estrarre i file, aggiornando la barra di progresso
 def download_and_extract():
-    # Mostra la schermata di caricamento
-    loading_screen = show_loading_screen()
+    # Mostra la schermata di caricamento con barra di progresso
+    loading_screen, progress_bar = show_loading_screen()
 
     zip_url = get_latest_release_zip_url()
     zip_file_path = "repo_ersc.zip"
 
     print(f"Downloading {zip_url} ...")
-    response = requests.get(zip_url)
+
+    # Scarica il file con gestione del progresso
+    response = requests.get(zip_url, stream=True)
+    total_length = int(response.headers.get('content-length'))
+
     with open(zip_file_path, "wb") as file:
-        file.write(response.content)
+        downloaded = 0
+        for data in response.iter_content(chunk_size=4096):
+            file.write(data)
+            downloaded += len(data)
+            progress_bar['value'] = (downloaded / total_length) * 100
+            root.update_idletasks()  # Aggiorna la GUI
     print(f"Downloaded {zip_file_path}")
 
+    # Estrai il file scaricato
     extract_dir = "estratti"
     os.makedirs(extract_dir, exist_ok=True)
 
@@ -186,10 +202,15 @@ install_type_var = tk.StringVar(value="rapida")
 install_type_frame = tk.Frame(root)
 install_type_frame.pack(pady=10)
 
-tk.Radiobutton(install_type_frame, text="Installazione Rapida", variable=install_type_var, value="rapida",
-               command=toggle_advanced_settings).pack(side=tk.LEFT)
-tk.Radiobutton(install_type_frame, text="Installazione Avanzata", variable=install_type_var, value="avanzata",
-               command=toggle_advanced_settings).pack(side=tk.LEFT)
+tk.Label(install_type_frame, text="Tipo di installazione:").pack(side=tk.LEFT)
+
+install_type_quick = tk.Radiobutton(install_type_frame, text="Rapida", variable=install_type_var, value="rapida",
+                                    command=toggle_advanced_settings)
+install_type_quick.pack(side=tk.LEFT)
+
+install_type_advanced = tk.Radiobutton(install_type_frame, text="Avanzata", variable=install_type_var, value="avanzata",
+                                       command=toggle_advanced_settings)
+install_type_advanced.pack(side=tk.LEFT)
 
 # Aggiungi una label e un campo di testo per inserire la password
 tk.Label(root, text="Inserisci la password per cooppassword:").pack(pady=10)
@@ -248,7 +269,7 @@ tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var).pack(anchor=tk.W
 
 # Bottone per copiare i file nella cartella di destinazione
 copy_button = tk.Button(root, text="Copia i file nella cartella di destinazione",
-                         command=lambda: copy_files("estratti"), state=tk.DISABLED)
+                        command=lambda: copy_files("estratti"), state=tk.DISABLED)
 copy_button.pack(pady=20)
 
 # Avvia automaticamente il processo di download e installazione
