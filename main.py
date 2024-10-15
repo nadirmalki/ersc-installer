@@ -15,8 +15,21 @@ def get_latest_release_zip_url():
     return zip_url
 
 
+# Funzione per mostrare la schermata di caricamento
+def show_loading_screen():
+    loading_screen = tk.Toplevel(root)
+    loading_screen.title("Caricamento...")
+    loading_label = tk.Label(loading_screen, text="Download in corso, attendere prego...")
+    loading_label.pack(padx=20, pady=20)
+    loading_screen.grab_set()  # Impedisce interazioni con la finestra principale
+    return loading_screen
+
+
 # Funzione per scaricare e estrarre i file, mantenendo la struttura delle cartelle
 def download_and_extract():
+    # Mostra la schermata di caricamento
+    loading_screen = show_loading_screen()
+
     zip_url = get_latest_release_zip_url()
     zip_file_path = "repo_ersc.zip"
 
@@ -38,6 +51,9 @@ def download_and_extract():
 
     # Elimina il file zip scaricato
     os.remove(zip_file_path)
+
+    # Chiude la schermata di caricamento una volta finito il download
+    loading_screen.destroy()
 
     return extract_dir
 
@@ -110,6 +126,14 @@ def copy_files(extract_dir):
     root.destroy()
 
 
+# Funzione per gestire la chiusura della finestra
+def on_close():
+    if os.path.exists("estratti"):
+        shutil.rmtree("estratti")
+        print("Temporary folder removed.")
+    root.destroy()
+
+
 def toggle_advanced_settings():
     if install_type_var.get() == "avanzata":
         advanced_frame.pack(pady=10)
@@ -153,6 +177,9 @@ def start_process():
 # Creazione dell'interfaccia grafica con Tkinter
 root = tk.Tk()
 root.title("Downloader ed estrattore ZIP")
+
+# Collega la funzione di chiusura alla finestra principale
+root.protocol("WM_DELETE_WINDOW", on_close)
 
 # Sezione per la selezione del tipo di installazione
 install_type_var = tk.StringVar(value="rapida")
