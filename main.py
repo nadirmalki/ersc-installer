@@ -272,7 +272,7 @@ tk.Label(advanced_frame, text="Boss posture absorption (% per player):").pack(an
 tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var).pack(anchor=tk.W)
 
 # Button to copy files to the destination folder
-copy_button = tk.Button(root, text="Copy files to the destination folder",
+copy_button = tk.Button(root, text="Copy files in the Elden Ring folder",
                         command=lambda: copy_files("extracted"), state=tk.DISABLED)
 copy_button.pack(pady=20)
 
