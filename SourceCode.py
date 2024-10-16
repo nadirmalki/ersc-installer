@@ -190,7 +190,7 @@ def toggle_advanced_settings():
 # Creazione dell'interfaccia utente
 root = tk.Tk()
 root.title("ersc installer")
-root.geometry("400x400")  # Dimensioni iniziali della finestra
+root.geometry("500x500")  # Dimensioni iniziali della finestra
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 
@@ -198,20 +198,20 @@ install_type_var = tk.StringVar(value="quick")
 
 # Elementi che verranno mostrati dopo il download
 install_type_frame = tk.Frame(root)
-tk.Label(install_type_frame, text="Installation type:").pack(side=tk.LEFT)
+tk.Label(install_type_frame, text="Installation type:", font=("Arial", 14)).pack(side=tk.LEFT)
 install_type_quick = tk.Radiobutton(install_type_frame, text="Quick", variable=install_type_var, value="quick",
-                                    command=toggle_advanced_settings)
+                                    command=toggle_advanced_settings, font=("Arial", 14))
 install_type_quick.pack(side=tk.LEFT)
 install_type_advanced = tk.Radiobutton(install_type_frame, text="Advanced", variable=install_type_var, value="advanced",
-                                       command=toggle_advanced_settings)
+                                       command=toggle_advanced_settings, font=("Arial", 14))
 install_type_advanced.pack(side=tk.LEFT)
 
-password_label = tk.Label(root, text="Enter the password for coop:")
-password_entry = tk.Entry(root)
+password_label = tk.Label(root, text="Enter the password for coop:", font=("Arial", 14))
+password_entry = tk.Entry(root, font=("Arial", 14))
 
-language_label = tk.Label(root, text="Select a language:")
+language_label = tk.Label(root, text="Select a language:", font=("Arial", 14))
 language_var = tk.StringVar(value="system default")
-language_dropdown = ttk.Combobox(root, textvariable=language_var)
+language_dropdown = ttk.Combobox(root, textvariable=language_var, state="readonly", font=("Arial", 14))
 
 # Parametri avanzati (visibili solo se l'utente seleziona l'opzione "Advanced")
 advanced_frame = tk.Frame(root)
@@ -221,10 +221,10 @@ summons_var = tk.BooleanVar(value=True)
 skip_splash_var = tk.BooleanVar(value=False)
 
 # Inserimento dei checkbutton avanzati
-tk.Checkbutton(advanced_frame, text="Allow invaders", variable=invaders_var).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Apply death debuffs", variable=death_debuffs_var).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Allow summoning of spirits", variable=summons_var).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Skip splash screens", variable=skip_splash_var).pack(anchor=tk.W)
+tk.Checkbutton(advanced_frame, text="Allow invaders", variable=invaders_var, font=("Arial", 14)).pack(anchor=tk.W)
+tk.Checkbutton(advanced_frame, text="Apply death debuffs", variable=death_debuffs_var, font=("Arial", 14)).pack(anchor=tk.W)
+tk.Checkbutton(advanced_frame, text="Allow summoning of spirits", variable=summons_var, font=("Arial", 14)).pack(anchor=tk.W)
+tk.Checkbutton(advanced_frame, text="Skip splash screens", variable=skip_splash_var, font=("Arial", 14)).pack(anchor=tk.W)
 
 # Advanced settings
 master_volume_var = tk.IntVar(value=5)
@@ -235,32 +235,32 @@ boss_health_scaling_var = tk.IntVar(value=100)
 boss_damage_scaling_var = tk.IntVar(value=0)
 boss_posture_scaling_var = tk.IntVar(value=20)
 
-tk.Label(advanced_frame, text="Startup volume (0-10):").pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Startup volume (0-10):", font=("Arial", 14)).pack(anchor=tk.W)
 tk.Scale(advanced_frame, from_=0, to=10, variable=master_volume_var, orient=tk.HORIZONTAL).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Enemy health (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_health_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy health (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_health_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Enemy damage (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_damage_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy damage (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_damage_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Enemy posture absorption (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_posture_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy posture absorption (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_posture_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Boss health (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_health_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Boss health (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_health_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Boss damage (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_damage_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Boss damage (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_damage_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
-tk.Label(advanced_frame, text="Boss posture absorption (% per player):").pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Boss posture absorption (% per player):", font=("Arial", 14)).pack(anchor=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var, font=("Arial", 14)).pack(anchor=tk.W)
 
 # Pulsante per copiare i file, inizialmente disabilitato
-copy_button = tk.Button(root, text="Copy files in the Elden Ring folder", command=lambda: copy_files("extracted"), state=tk.DISABLED)
+copy_button = tk.Button(root, text="Copy files in the Elden Ring folder", command=lambda: copy_files("extracted"), state=tk.DISABLED, font=("Arial", 14))
 
 # Pulsante di download, centrato
-download_button = tk.Button(root, text="Download", command=start_process, font=("Arial", 18))
+download_button = tk.Button(root, text="Download", command=start_process, font=("Arial", 14))
 download_button.pack(pady=100)  # Centra con padding verticale maggiore
 
 root.mainloop()
