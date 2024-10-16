@@ -194,11 +194,14 @@ def toggle_advanced_settings():
 # Creazione dell'interfaccia utente
 root = tk.Tk()
 root.title("ersc installer")
-root.geometry("500x500")  # Dimensioni iniziali della finestra
+root.geometry("300x300")  # Dimensioni iniziali della finestra
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 
 install_type_var = tk.StringVar(value="quick")
+
+welcome_label = tk.Label(root, text="Press to Download files", font=("Arial", 16, "bold"))
+welcome_label.pack(pady=20)
 
 # Elementi che verranno mostrati dopo il download
 install_type_frame = tk.Frame(root)
