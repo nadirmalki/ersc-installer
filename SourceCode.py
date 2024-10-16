@@ -61,6 +61,10 @@ def download_and_extract():
     os.remove(zip_file_path)
     loading_screen.destroy()
 
+    # Nascondi le etichette di benvenuto 1 e 2
+    welcome_label1.pack_forget()
+    welcome_label2.pack_forget()
+
     # Nascondi il pulsante di download e mostra gli altri controlli
     download_button.pack_forget()
     install_type_frame.pack(pady=10)
@@ -194,14 +198,16 @@ def toggle_advanced_settings():
 # Creazione dell'interfaccia utente
 root = tk.Tk()
 root.title("ersc-installer")
-root.geometry("300x300")  # Dimensioni iniziali della finestra
+root.geometry("")  # Dimensioni iniziali della finestra
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 
 install_type_var = tk.StringVar(value="quick")
 
-welcome_label = tk.Label(root, text="Press to Download files", font=("Arial", 16, "bold"))
-welcome_label.pack(pady=20)
+welcome_label1 = tk.Label(root, text="Welcome to ERSCInstaller", font=("Arial", 16, "bold"))
+welcome_label2 = tk.Label(root, text="    Press the button to download the mod    ", font=("Arial", 16))
+welcome_label1.pack(pady=20)
+welcome_label2.pack(pady=0)
 
 # Elementi che verranno mostrati dopo il download
 install_type_frame = tk.Frame(root)
@@ -283,6 +289,9 @@ copy_button = tk.Button(root, text="Copy files in the Elden Ring folder", comman
 
 # Pulsante di download, centrato
 download_button = tk.Button(root, text="Download", command=start_process, font=("Arial", 12))
-download_button.pack(pady=100)  # Centra con padding verticale maggiore
+download_button.pack(pady=50)  # Centra con padding verticale maggiore
+
+welcome_label3 = tk.Label(root, text="Developed by ImHaise and tsutonez", font=("Arial", 11))
+welcome_label3.pack(side=tk.BOTTOM, pady=10)
 
 root.mainloop()
