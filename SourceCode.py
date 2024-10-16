@@ -6,7 +6,7 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-# Funzione per ottenere l'URL dell'ultima versione del file .zip
+# Function to obtain URL of latest ERSC zip file
 def get_latest_release_zip_url():
     latest_url = "https://github.com/LukeYui/EldenRingSeamlessCoopRelease/releases/latest"
     response = requests.get(latest_url, allow_redirects=True)
@@ -14,7 +14,7 @@ def get_latest_release_zip_url():
     zip_url = final_url.replace('/tag/', '/download/') + "/ersc.zip"
     return zip_url
 
-# Funzione per mostrare la schermata di caricamento con barra di progresso
+# Loading screen with loading bar function
 def show_loading_screen():
     loading_screen = tk.Toplevel(root)
     loading_screen.title("Loading...")
@@ -25,7 +25,6 @@ def show_loading_screen():
     progress_bar = ttk.Progressbar(loading_screen, orient="horizontal", mode="determinate", length=300)
     progress_bar.pack(padx=20, pady=10)
 
-    # Forza l'aggiornamento della finestra per renderla visibile su tutte le piattaforme
     loading_screen.update_idletasks()
 
     loading_screen.grab_set()
@@ -47,7 +46,7 @@ def download_and_extract():
             file.write(data)
             downloaded += len(data)
             progress_bar['value'] = (downloaded / total_length) * 100
-            loading_screen.update_idletasks()  # Aggiorna la finestra di caricamento durante il download
+            loading_screen.update_idletasks()
             root.update_idletasks()
     print(f"Downloaded {zip_file_path}")
 
@@ -61,11 +60,9 @@ def download_and_extract():
     os.remove(zip_file_path)
     loading_screen.destroy()
 
-    # Nascondi le etichette di benvenuto 1 e 2
     welcome_label1.pack_forget()
     welcome_label2.pack_forget()
 
-    # Nascondi il pulsante di download e mostra gli altri controlli
     download_button.pack_forget()
     install_type_frame.pack(pady=10)
     password_label.pack(pady=10)
@@ -74,14 +71,13 @@ def download_and_extract():
     language_dropdown.pack(pady=10)
     copy_button.pack(pady=20)
 
-    # Nascondi il frame dei parametri avanzati di default
     advanced_frame.pack_forget()
-    root.geometry("")  # Adatta la finestra
+    root.geometry("")
 
     copy_button.config(state=tk.NORMAL)
     return extract_dir
 
-# Funzione per copiare file nella directory di destinazione
+# Function to copy files in destination folder (ER Folder)
 def copy_files(extract_dir):
     destination_dir = filedialog.askdirectory(title="Choose the destination folder")
     if not destination_dir:
@@ -152,14 +148,14 @@ def copy_files(extract_dir):
     messagebox.showinfo("Completed", f"Files extracted and copied successfully to the folder: {destination_dir}")
     root.destroy()
 
-# Funzione per gestire la chiusura della finestra
+# Window close function
 def on_close():
     if os.path.exists("extracted"):
         shutil.rmtree("extracted")
         print("Temporary folder removed.")
     root.destroy()
 
-# Funzione per aggiornare la lista delle lingue
+# Dinamically obtained languages list from the locale folder
 def update_language_dropdown(extract_dir):
     locale_dir = os.path.join(extract_dir, "SeamlessCoop", "locale")
     if os.path.exists(locale_dir):
@@ -186,19 +182,18 @@ def load_languages(locale_dir):
 def start_process():
     threading.Thread(target=download_and_extract).start()
 
-# Funzione per adattare i controlli dell'installazione avanzata
 def toggle_advanced_settings():
     if install_type_var.get() == "advanced":
         advanced_frame.pack(pady=10)
-        root.geometry("")  # Reimposta la dimensione della finestra per adattarla
+        root.geometry("")
     else:
         advanced_frame.pack_forget()
-        root.geometry("")  # Adatta di nuovo la finestra
+        root.geometry("")
 
-# Creazione dell'interfaccia utente
+# User interface
 root = tk.Tk()
 root.title("ersc-installer")
-root.geometry("")  # Dimensioni iniziali della finestra
+root.geometry("")
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 
@@ -209,7 +204,7 @@ welcome_label2 = tk.Label(root, text="    Press the button to download the mod  
 welcome_label1.pack(pady=20)
 welcome_label2.pack(pady=0)
 
-# Elementi che verranno mostrati dopo il download
+# UI of second Window
 install_type_frame = tk.Frame(root)
 tk.Label(install_type_frame, text="Installation type:", font=("Arial", 12), padx=10).pack(side=tk.LEFT)
 install_type_quick = tk.Radiobutton(install_type_frame, text="Quick", variable=install_type_var, value="quick",
@@ -226,14 +221,13 @@ language_label = tk.Label(root, text="Select a language:", font=("Arial", 12))
 language_var = tk.StringVar(value="system default")
 language_dropdown = ttk.Combobox(root, textvariable=language_var, state="readonly", font=("Arial", 12))
 
-# Parametri avanzati (visibili solo se l'utente seleziona l'opzione "Advanced")
+# Advanced Parameters (visible if user selected "Advanced" option)
 advanced_frame = tk.Frame(root)
 invaders_var = tk.BooleanVar(value=True)
 death_debuffs_var = tk.BooleanVar(value=True)
 summons_var = tk.BooleanVar(value=True)
 skip_splash_var = tk.BooleanVar(value=False)
 
-# Inserimento dei checkbutton avanzati
 tk.Checkbutton(advanced_frame, text="Allow invaders", variable=invaders_var, font=("Arial", 12)).grid(row=0, column=0, sticky=tk.W, padx=10)
 tk.Checkbutton(advanced_frame, text="Apply death debuffs", variable=death_debuffs_var, font=("Arial", 12)).grid(row=1, column=0, sticky=tk.W, padx=10)
 tk.Checkbutton(advanced_frame, text="Allow summoning of spirits", variable=summons_var, font=("Arial", 12)).grid(row=2, column=0, sticky=tk.W, padx=10)
@@ -248,14 +242,13 @@ boss_health_scaling_var = tk.IntVar(value=100)
 boss_damage_scaling_var = tk.IntVar(value=0)
 boss_posture_scaling_var = tk.IntVar(value=20)
 
-# Funzione di validazione che consente solo numeri
+# Onlu numbers in the advanced paramters
 def validate_numeric_input(char):
     return char.isdigit() or char == ""
 
-# Registriamo la funzione di validazione
 validate_command = root.register(validate_numeric_input)
 
-# Parametri avanzati (etichetta a sinistra, input a destra)
+# UI Advanced Paramters
 tk.Label(advanced_frame, text="Startup volume (0-10):", font=("Arial", 12)).grid(row=4, column=0, sticky=tk.W, padx=10)
 tk.Scale(advanced_frame, from_=0, to=10, variable=master_volume_var, orient=tk.HORIZONTAL).grid(row=4, column=1, sticky=tk.W, padx=10)
 
@@ -284,14 +277,16 @@ tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var, font=("Arial", 1
          validate="key", validatecommand=(validate_command, '%S')).grid(row=10, column=1, sticky=tk.W, padx=10)
 
 
-# Pulsante per copiare i file, inizialmente disabilitato
+# Copy files Button
 copy_button = tk.Button(root, text="Copy files in the Elden Ring folder", command=lambda: copy_files("extracted"), state=tk.DISABLED, font=("Arial", 12))
 
-# Pulsante di download, centrato
+# Download button
 download_button = tk.Button(root, text="Download", command=start_process, font=("Arial", 12))
-download_button.pack(pady=50)  # Centra con padding verticale maggiore
+download_button.pack(pady=50)
 
 welcome_label3 = tk.Label(root, text="Developed by ImHaise and tsutonez", font=("Arial", 11))
 welcome_label3.pack(side=tk.BOTTOM, pady=10)
 
 root.mainloop()
+
+
