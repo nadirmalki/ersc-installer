@@ -13,7 +13,7 @@
 ## How to Use
 
 1. **Download and Run ERSCInstaller.exe**:
-   - Upon launching the installer, it will automatically begin downloading the latest release of the Seamless Coop mod from the official GitHub repository.
+   - Upon launching the installer, it will begin downloading the latest release of the Seamless Coop mod from the official [GitHub repository](https://github.com/LukeYui/EldenRingSeamlessCoopRelease/releases).
 
 2. **Select Installation Type**:
    - Choose between **Quick** or **Advanced** installation:
@@ -52,7 +52,6 @@
 
 ## Troubleshooting
 
-- **Missing Files**: If certain files or folders (e.g., `ersc_settings.ini`) cannot be found, ensure that you have selected the correct Elden Ring game directory.
 - **Download Issues**: If the mod download fails, check your internet connection and verify that the GitHub release page is accessible.
 
 ## Credits
