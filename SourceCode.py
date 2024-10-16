@@ -193,7 +193,7 @@ def toggle_advanced_settings():
 
 # Creazione dell'interfaccia utente
 root = tk.Tk()
-root.title("ersc installer")
+root.title("ersc-installer")
 root.geometry("300x300")  # Dimensioni iniziali della finestra
 
 root.protocol("WM_DELETE_WINDOW", on_close)
