@@ -73,6 +73,8 @@ def download_and_extract():
     # Nascondi il frame dei parametri avanzati di default
     advanced_frame.pack_forget()
     root.geometry("")  # Adatta la finestra
+
+    copy_button.config(state=tk.NORMAL)
     return extract_dir
 
 # Funzione per copiare file nella directory di destinazione
@@ -179,9 +181,6 @@ def load_languages(locale_dir):
 
 def start_process():
     threading.Thread(target=download_and_extract).start()
-    extract_dir = download_and_extract()
-    if extract_dir:
-        copy_button.config(state=tk.NORMAL)
 
 # Funzione per adattare i controlli dell'installazione avanzata
 def toggle_advanced_settings():
