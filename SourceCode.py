@@ -225,10 +225,10 @@ summons_var = tk.BooleanVar(value=True)
 skip_splash_var = tk.BooleanVar(value=False)
 
 # Inserimento dei checkbutton avanzati
-tk.Checkbutton(advanced_frame, text="Allow invaders", variable=invaders_var, font=("Arial", 12)).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Apply death debuffs", variable=death_debuffs_var, font=("Arial", 12)).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Allow summoning of spirits", variable=summons_var, font=("Arial", 12)).pack(anchor=tk.W)
-tk.Checkbutton(advanced_frame, text="Skip splash screens", variable=skip_splash_var, font=("Arial", 12)).pack(anchor=tk.W)
+tk.Checkbutton(advanced_frame, text="Allow invaders", variable=invaders_var, font=("Arial", 12)).grid(row=0, column=0, sticky=tk.W)
+tk.Checkbutton(advanced_frame, text="Apply death debuffs", variable=death_debuffs_var, font=("Arial", 12)).grid(row=1, column=0, sticky=tk.W)
+tk.Checkbutton(advanced_frame, text="Allow summoning of spirits", variable=summons_var, font=("Arial", 12)).grid(row=2, column=0, sticky=tk.W)
+tk.Checkbutton(advanced_frame, text="Skip splash screens", variable=skip_splash_var, font=("Arial", 12)).grid(row=3, column=0, sticky=tk.W)
 
 # Advanced settings
 master_volume_var = tk.IntVar(value=5)
@@ -239,26 +239,41 @@ boss_health_scaling_var = tk.IntVar(value=100)
 boss_damage_scaling_var = tk.IntVar(value=0)
 boss_posture_scaling_var = tk.IntVar(value=20)
 
-tk.Label(advanced_frame, text="Startup volume (0-10):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Scale(advanced_frame, from_=0, to=10, variable=master_volume_var, orient=tk.HORIZONTAL).pack(anchor=tk.W)
+# Funzione di validazione che consente solo numeri
+def validate_numeric_input(char):
+    return char.isdigit() or char == ""
 
-tk.Label(advanced_frame, text="Enemy health (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_health_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+# Registriamo la funzione di validazione
+validate_command = root.register(validate_numeric_input)
 
-tk.Label(advanced_frame, text="Enemy damage (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_damage_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+# Parametri avanzati (etichetta a sinistra, input a destra)
+tk.Label(advanced_frame, text="Startup volume (0-10):", font=("Arial", 12)).grid(row=4, column=0, sticky=tk.W)
+tk.Scale(advanced_frame, from_=0, to=10, variable=master_volume_var, orient=tk.HORIZONTAL).grid(row=4, column=1, sticky=tk.W)
 
-tk.Label(advanced_frame, text="Enemy posture absorption (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=enemy_posture_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy health (% per player):", font=("Arial", 12)).grid(row=5, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_health_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=5, column=1, sticky=tk.W)
 
-tk.Label(advanced_frame, text="Boss health (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_health_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy damage (% per player):", font=("Arial", 12)).grid(row=6, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_damage_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=6, column=1, sticky=tk.W)
 
-tk.Label(advanced_frame, text="Boss damage (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_damage_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Enemy posture absorption (% per player):", font=("Arial", 12)).grid(row=7, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=enemy_posture_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=7, column=1, sticky=tk.W)
 
-tk.Label(advanced_frame, text="Boss posture absorption (% per player):", font=("Arial", 12)).pack(anchor=tk.W)
-tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var, font=("Arial", 12)).pack(anchor=tk.W)
+tk.Label(advanced_frame, text="Boss health (% per player):", font=("Arial", 12)).grid(row=8, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_health_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=8, column=1, sticky=tk.W)
+
+tk.Label(advanced_frame, text="Boss damage (% per player):", font=("Arial", 12)).grid(row=9, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_damage_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=9, column=1, sticky=tk.W)
+
+tk.Label(advanced_frame, text="Boss posture absorption (% per player):", font=("Arial", 12)).grid(row=10, column=0, sticky=tk.W)
+tk.Entry(advanced_frame, textvariable=boss_posture_scaling_var, font=("Arial", 12),
+         validate="key", validatecommand=(validate_command, '%S')).grid(row=10, column=1, sticky=tk.W)
+
 
 # Pulsante per copiare i file, inizialmente disabilitato
 copy_button = tk.Button(root, text="Copy files in the Elden Ring folder", command=lambda: copy_files("extracted"), state=tk.DISABLED, font=("Arial", 12))
