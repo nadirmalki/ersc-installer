@@ -24,11 +24,13 @@ def show_loading_screen():
     progress_bar = ttk.Progressbar(loading_screen, orient="horizontal", mode="determinate", length=300)
     progress_bar.pack(padx=20, pady=10)
 
+    # Forza l'aggiornamento della finestra per renderla visibile su tutte le piattaforme
+    loading_screen.update_idletasks()
+
     loading_screen.grab_set()
     loading_screen.transient(root)
     return loading_screen, progress_bar
 
-# Funzione per scaricare e estrarre file, aggiornando la barra di progresso
 def download_and_extract():
     loading_screen, progress_bar = show_loading_screen()
     zip_url = get_latest_release_zip_url()
@@ -44,6 +46,7 @@ def download_and_extract():
             file.write(data)
             downloaded += len(data)
             progress_bar['value'] = (downloaded / total_length) * 100
+            loading_screen.update_idletasks()  # Aggiorna la finestra di caricamento durante il download
             root.update_idletasks()
     print(f"Downloaded {zip_file_path}")
 
